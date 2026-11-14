@@ -1,6 +1,27 @@
+# Dependencies and build output (recreated by `npm install` / `npm run build`)
 node_modules/
 dist/
 .astro/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Hosting / deployment local state
+.vercel/
+.netlify/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / editor clutter
 .DS_Store
-# saved reference page from another business's site
+Thumbs.db
+.idea/
+
+# Saved reference page from another business's site (not ours to publish)
 new hero image.html
