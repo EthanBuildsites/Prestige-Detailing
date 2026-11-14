@@ -1,0 +1,183 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../config/site';
+import { services } from '../data/content';
+import Icon from './Icon.astro';
+
+const [feature, a, b, c, full] = services;
+const num = (s: typeof feature) => String(services.indexOf(s) + 1).padStart(2, '0');
+---
+<section class="section services on-charcoal" id="services" aria-labelledby="services-title">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="label" data-reveal><span><b>02</b> &nbsp;Services</span></p>
+        <h2 class="display" id="services-title" data-reveal>Detailing,<br /><em>done properly.</em></h2>
+      </div>
+      <div class="head-side" data-reveal>
+        <p>From a cabin refresh to multi-year ceramic protection, every service is tailored to your vehicle and how you use it.</p>
+        <p class="demo-note"><span class="demo-chip">Demo content</span> Service list and prices are placeholders pending confirmation from Prestige.</p>
+      </div>
+    </div>
+
+    <!-- 01: Feature: ceramic coating -->
+    <article class="feature" id={feature.id}>
+      <div class="f-media" data-wipe>
+        <Image src={feature.image} alt={feature.alt} widths={[640, 960, 1440, 1920]} sizes="(min-width: 960px) 66vw, 100vw" />
+      </div>
+      <div class="f-card" data-reveal>
+        <p class="kicker"><span>{num(feature)}</span>{feature.kicker}</p>
+        <h3>{feature.name}</h3>
+        <p class="blurb">{feature.blurb}</p>
+        <ul class="points" role="list">
+          {feature.points.map((p) => <li><Icon name="check" />{p}</li>)}
+        </ul>
+        <div class="price-row">
+          <p class="price"><small>Example price</small>{feature.price}</p>
+          {!feature.confirmed && <span class="demo-chip">To confirm</span>}
+        </div>
+        <a class="btn" href={site.contact.phoneHref}><Icon name="phone" /> Call to enquire</a>
+      </div>
+    </article>
+
+    <!-- 02 + 03: Asymmetric pair -->
+    <div class="pair">
+      {[a, b].map((s, i) => (
+        <article class:list={['card', i === 0 ? 'card-tall' : 'card-wide']} id={s.id} data-reveal style={`--d:${i * 0.12}s`}>
+          <div class="c-media">
+            <Image src={s.image} alt={s.alt} widths={[480, 720, 960]} sizes="(min-width: 960px) 40vw, 100vw" />
+            <span class="c-num">{num(s)}</span>
+          </div>
+          <div class="c-body">
+            <p class="kicker">{s.kicker}</p>
+            <h3>{s.name}</h3>
+            <p class="blurb">{s.blurb}</p>
+            <div class="c-foot">
+              <p class="price"><small>Example price</small>{s.price}</p>
+              {!s.confirmed && <span class="demo-chip">To confirm</span>}
+            </div>
+            <a class="link" href={site.contact.phoneHref}><Icon name="phone" /> Call to enquire</a>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- 04: Split row, image right -->
+    <article class="row" id={c.id}>
+      <div class="r-body" data-reveal>
+        <p class="kicker"><span>{num(c)}</span>{c.kicker}</p>
+        <h3>{c.name}</h3>
+        <p class="blurb">{c.blurb}</p>
+        <ol class="steps" role="list">
+          {c.points.map((p, i) => <li><span>{String(i + 1).padStart(2, '0')}</span>{p}</li>)}
+        </ol>
+        <div class="price-row">
+          <p class="price"><small>Example price</small>{c.price}</p>
+          {!c.confirmed && <span class="demo-chip">To confirm</span>}
+        </div>
+        <a class="btn ghost" href={site.contact.phoneHref}><Icon name="phone" /> Call to enquire</a>
+      </div>
+      <div class="r-media" data-wipe>
+        <Image src={c.image} alt={c.alt} widths={[480, 720, 960, 1200]} sizes="(min-width: 960px) 50vw, 100vw" />
+      </div>
+    </article>
+
+    <!-- 05: Full-width package banner -->
+    <article class="banner" id={full.id} data-reveal>
+      <Image class="b-bg" src={full.image} alt="" widths={[800, 1280, 1920]} sizes="100vw" />
+      <div class="b-inner">
+        <div>
+          <p class="kicker"><span>{num(full)}</span>{full.kicker}</p>
+          <h3>{full.name}</h3>
+        </div>
+        <p class="blurb">{full.blurb}</p>
+        <div class="b-cta">
+          <p class="price">{full.price}</p>
+          <a class="btn" href={site.contact.phoneHref}><Icon name="phone" /> Call {site.contact.phone}</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .head { display: grid; gap: 28px; margin-bottom: clamp(48px, 7vw, 88px); }
+  .head-side { display: grid; gap: 22px; align-content: end; max-width: 46ch; color: var(--muted-on-dark); }
+  .demo-note { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; font-size: 13px; line-height: 1.5; padding-top: 18px; border-top: 1px solid var(--line-dark); }
+  @media (min-width: 960px) {
+    .head { grid-template-columns: 1.4fr 1fr; align-items: end; }
+  }
+
+  @media (max-width: 599px) { .kicker, .price small { font-size: 12px !important; } .demo-note { font-size: 14px; } }
+  .kicker { display: flex; align-items: center; gap: 12px; font-size: 11px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red-hot); }
+  .kicker span { color: var(--muted-on-dark); }
+  h3 { font-size: clamp(30px, 3.6vw, 52px); }
+  .blurb { color: var(--muted-on-dark); max-width: 46ch; }
+  .price { display: grid; gap: 2px; font-size: clamp(26px, 2.6vw, 34px); font-weight: 800; font-stretch: 125%; line-height: 1; }
+  .price small { font-size: 10px; font-weight: 700; font-stretch: 100%; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted-on-dark); }
+  .price-row, .c-foot { display: flex; align-items: end; flex-wrap: wrap; gap: 12px 18px; }
+
+  .services :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* 01 Feature */
+  .feature { position: relative; display: grid; margin-bottom: clamp(56px, 8vw, 120px); }
+  .f-media { aspect-ratio: 16 / 10; overflow: hidden; }
+  .f-card {
+    position: relative; display: grid; gap: 20px; justify-items: start;
+    padding: clamp(28px, 4vw, 52px); background: var(--black); border-top: 3px solid var(--red);
+    margin: -48px 12px 0;
+  }
+  .points { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .points li { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+  .points :global(svg) { width: 18px; height: 18px; color: var(--red-hot); }
+  @media (min-width: 960px) {
+    .feature { grid-template-columns: repeat(12, 1fr); align-items: center; }
+    .f-media { grid-column: 1 / 9; grid-row: 1; aspect-ratio: 16 / 11; }
+    .f-card { grid-column: 8 / 13; grid-row: 1; margin: 0; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.8); }
+  }
+
+  /* 02 + 03 Pair */
+  .pair { display: grid; gap: clamp(40px, 5vw, 64px); margin-bottom: clamp(72px, 9vw, 140px); }
+  .card { display: grid; gap: 24px; align-content: start; }
+  .c-media { position: relative; overflow: hidden; }
+  .c-media :global(img) { transition: transform 1.2s var(--ease), filter 0.8s; filter: saturate(0.9); }
+  .card:hover .c-media :global(img) { transform: scale(1.05); filter: saturate(1.05); }
+  .c-num {
+    position: absolute; left: 0; bottom: 0; padding: 12px 16px 10px; background: var(--charcoal);
+    font-size: 44px; font-weight: 900; font-stretch: 125%; line-height: 0.8; color: transparent; -webkit-text-stroke: 1.2px var(--red-hot);
+  }
+  .c-body { display: grid; gap: 16px; justify-items: start; }
+  .card-tall .c-media { aspect-ratio: 4 / 5; }
+  .card-wide .c-media { aspect-ratio: 4 / 3; }
+  @media (min-width: 960px) {
+    .pair { grid-template-columns: 5fr 1fr 6fr; align-items: start; }
+    .card-tall { grid-column: 1; }
+    .card-wide { grid-column: 3; margin-top: 160px; }
+  }
+
+  /* 04 Row */
+  .row { display: grid; gap: 32px; margin-bottom: clamp(72px, 9vw, 140px); padding-top: clamp(40px, 5vw, 64px); border-top: 1px solid var(--line-dark); }
+  .r-body { display: grid; gap: 20px; justify-items: start; align-content: center; }
+  .r-media { aspect-ratio: 1; overflow: hidden; }
+  .steps { list-style: none; margin: 4px 0; padding: 0; width: 100%; max-width: 440px; }
+  .steps li { display: flex; gap: 18px; padding: 14px 0; border-bottom: 1px solid var(--line-dark); font-weight: 600; }
+  .steps span { color: var(--red-hot); font-size: 12px; font-weight: 800; letter-spacing: 0.1em; padding-top: 3px; }
+  @media (min-width: 960px) {
+    .row { grid-template-columns: 5fr 1fr 6fr; }
+    .r-body { grid-column: 1; }
+    .r-media { grid-column: 3; aspect-ratio: 6 / 5; }
+  }
+
+  /* 05 Banner */
+  .banner { position: relative; overflow: hidden; isolation: isolate; background: var(--black); }
+  .banner :global(.b-bg) { position: absolute; inset: 0; z-index: -1; opacity: 0.5; transition: transform 1.6s var(--ease), opacity 0.8s; }
+  .banner:hover :global(.b-bg) { transform: scale(1.04); opacity: 0.6; }
+  .banner::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(10,10,11,0.95), rgba(10,10,11,0.55) 70%, rgba(10,10,11,0.3)); }
+  .b-inner { display: grid; gap: 22px; padding: clamp(36px, 6vw, 80px); border-left: 4px solid var(--red); }
+  .b-inner .blurb { color: rgba(255, 255, 255, 0.78); }
+  .b-cta { display: grid; gap: 16px; justify-items: start; }
+  .b-cta .price { font-size: 13px; letter-spacing: 0.16em; text-transform: uppercase; color: #f2b632; }
+  @media (min-width: 960px) {
+    .b-inner { grid-template-columns: 1.1fr 1fr auto; align-items: end; gap: 48px; }
+  }
+</style>

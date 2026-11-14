@@ -1,0 +1,116 @@
+---
+import { Image } from 'astro:assets';
+import { site, nav, fullAddress } from '../config/site';
+import { credits } from '../data/content';
+import Icon from './Icon.astro';
+import Wordmark from './Wordmark.astro';
+import logo from '../assets/images/logo.png';
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap cta-row">
+    <h2>Let's get your car <em>looking its best.</em></h2>
+    <a class="btn" href={site.contact.phoneHref}><Icon name="phone" /> Call {site.contact.phone}</a>
+  </div>
+
+  <div class="wrap cols">
+    <div class="brand">
+      <Wordmark size="lg" />
+      <Image class="logo" src={logo} alt="Prestige Mobile Car Detailing logo" width={225} />
+    </div>
+
+    <nav aria-label="Footer">
+      <h3>Explore</h3>
+      {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+    </nav>
+
+    <div class="col">
+      <h3>Contact</h3>
+      <a class="big" href={site.contact.phoneHref}>{site.contact.phone}</a>
+      <a href={site.contact.directionsUrl} target="_blank" rel="noopener">{site.contact.street}<br />{site.contact.suburb} {site.contact.state} {site.contact.postcode}</a>
+    </div>
+
+    <div class="col">
+      <h3>Hours</h3>
+      <dl class="hrs">
+        <div><dt>Mon – Fri</dt><dd>7am – 5pm</dd></div>
+        <div><dt>Sat – Sun</dt><dd>Closed</dd></div>
+      </dl>
+    </div>
+  </div>
+
+  {site.isDemo && (
+    <div class="wrap">
+      <p class="demo">
+        <span class="demo-chip">Concept website</span>
+        This is a design concept prepared for Prestige Car Detailing Townsville. It is not yet the official business website. Services, prices and imagery are illustrative and need confirmation from the owner.
+      </p>
+    </div>
+  )}
+
+  <div class="wrap bottom">
+    <span>© {year} {site.name}</span>
+    <span class="credits">Illustrative photography via Unsplash: {credits.join(', ')}.</span>
+  </div>
+</footer>
+
+<a class="to-top" href="#top" aria-label="Back to top" data-to-top><Icon name="up" /></a>
+
+<div class="m-bar" data-mbar>
+  <a class="q" href={site.contact.phoneHref}><Icon name="phone" /> Call {site.contact.phone}</a>
+</div>
+
+<style>
+  .footer { background: var(--ink); padding-top: clamp(72px, 9vw, 120px); font-size: 15px; }
+  .cta-row { display: grid; gap: 28px; justify-items: start; padding-bottom: clamp(56px, 7vw, 88px); border-bottom: 1px solid var(--line-dark); }
+  .cta-row h2 { font-size: clamp(32px, 5vw, 72px); max-width: 16ch; }
+  .cta-row em { font-style: normal; color: var(--red-hot); }
+  @media (min-width: 900px) { .cta-row { grid-template-columns: 1fr auto; align-items: end; } }
+
+  .cols { display: grid; gap: 40px; padding-block: 56px; }
+  @media (min-width: 640px) { .cols { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1040px) { .cols { grid-template-columns: 1.6fr 1fr 1.2fr 1fr; } }
+  .brand { display: grid; gap: 28px; align-content: start; justify-items: start; }
+  .brand :global(.logo) { width: 120px; height: auto; opacity: 0.95; }
+  h3 { font-size: 11px; font-stretch: 100%; letter-spacing: 0.22em; color: var(--muted-on-dark); margin-bottom: 18px; }
+  nav, .col { display: grid; gap: 10px; align-content: start; }
+  a { text-decoration: none; color: rgba(255, 255, 255, 0.82); transition: color 0.3s; }
+  a:hover { color: var(--red-hot); }
+  nav a { font-size: 14px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; min-height: 44px; display: flex; align-items: center; }
+  nav, .col { gap: 2px; }
+  .col a { min-height: 44px; display: flex; align-items: center; }
+  .big { font-size: 24px; font-weight: 900; font-stretch: 125%; color: #fff; }
+  .hrs { margin: 0; display: grid; gap: 8px; }
+  .hrs div { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line-dark); padding-bottom: 8px; max-width: 240px; }
+  .hrs dt { color: rgba(255,255,255,0.82); }
+  .hrs dd { margin: 0; color: var(--muted-on-dark); }
+
+  .demo { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; padding: 18px 0; border-top: 1px solid var(--line-dark); font-size: 13px; color: var(--muted-on-dark); line-height: 1.5; }
+  .bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; padding-block: 22px 28px; border-top: 1px solid var(--line-dark); font-size: 12px; color: #8e9096; }
+  .credits { max-width: 70ch; }
+
+  .to-top {
+    position: fixed; right: 20px; bottom: 20px; z-index: 90; display: grid; place-items: center; width: 52px; height: 52px;
+    background: var(--ink); color: #fff; border: 1px solid rgba(255,255,255,0.18); box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity 0.4s, transform 0.4s var(--ease), background 0.3s;
+  }
+  .to-top:hover { background: var(--red); border-color: var(--red); color: #fff; }
+  .to-top :global(svg) { width: 20px; height: 20px; }
+  .to-top:global(.show) { opacity: 1; transform: none; pointer-events: auto; }
+
+  /* Mobile sticky action bar */
+  .m-bar { display: none; }
+  @media (max-width: 719px) {
+    .m-bar {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 90; display: grid; grid-template-columns: 1fr;
+      background: var(--black); border-top: 1px solid var(--line-dark); padding-bottom: env(safe-area-inset-bottom);
+      transform: translateY(100%); transition: transform 0.5s var(--ease);
+    }
+    .m-bar:global(.show) { transform: none; }
+    .m-bar a { display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 58px; color: #fff; font-size: 12px; font-weight: 800; font-stretch: 125%; letter-spacing: 0.12em; text-transform: uppercase; }
+    .m-bar a.q { background: var(--red); }
+    .m-bar :global(svg) { width: 17px; height: 17px; }
+    .to-top { bottom: 76px; right: 14px; width: 46px; height: 46px; }
+    .footer { padding-bottom: 58px; }
+  }
+</style>

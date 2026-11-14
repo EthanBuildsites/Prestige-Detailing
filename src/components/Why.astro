@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+import img from '../assets/images/headlights-dark.jpg';
+
+const stats = [
+  { value: String(site.established), label: 'Established', note: 'Detailing Townsville vehicles since 2012.' },
+  { value: String(site.reviews.count), label: `${site.reviews.source} reviews`, note: 'From local customers.' },
+  { value: 'Full', label: 'Warranty', note: 'On the products we supply and install.' },
+];
+const reasons = [
+  { icon: 'pin', title: 'Locally operated', text: 'A Townsville business looking after vehicles across the greater region.' },
+  { icon: 'drop', title: 'Ceramic coating focus', text: 'A strong emphasis on supplying and installing ceramic coatings for lasting protection.' },
+  { icon: 'globe', title: 'Internationally recognised products', text: 'Quality products from internationally recognised brands.' },
+  { icon: 'shield', title: 'Protection inside and out', text: 'Ongoing care for both the paintwork and the cabin of your pride and joy.' },
+] as const;
+---
+<section class="section why on-steel" id="why" aria-labelledby="why-title">
+  <div class="wrap grid">
+    <div class="intro">
+      <p class="label" data-reveal><span><b>03</b> &nbsp;Why Prestige</span></p>
+      <h2 class="display" id="why-title" data-reveal>Built on <em>care</em>,<br />backed by warranty.</h2>
+      <figure class="img" data-wipe>
+        <div data-parallax="0.06" class="pimg">
+          <Image src={img} alt="Dark car in a black studio with its headlights on" widths={[480, 720, 960]} sizes="(min-width: 960px) 34vw, 90vw" />
+        </div>
+      </figure>
+    </div>
+
+    <div class="body">
+      <dl class="stats">
+        {stats.map((s, i) => (
+          <div class="stat" data-reveal style={`--d:${i * 0.1}s`}>
+            <dt>{s.label}</dt>
+            <dd class="value" data-count={/^\d+$/.test(s.value) ? s.value : undefined}>{s.value}</dd>
+            <dd class="note">{s.note}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <ul class="reasons" role="list">
+        {reasons.map((r, i) => (
+          <li data-reveal style={`--d:${(i % 2) * 0.1}s`}>
+            <span class="ico"><Icon name={r.icon} /></span>
+            <h3>{r.title}</h3>
+            <p>{r.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .why {
+    background:
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 3px),
+      linear-gradient(115deg, #d4d6da 0%, #b9bcc1 45%, #cfd1d5 70%, #aeb1b6 100%);
+  }
+  .grid { display: grid; gap: clamp(48px, 6vw, 80px); }
+  .intro .display { font-size: clamp(44px, 8vw, 92px); }
+  @media (min-width: 1040px) { .intro .display { font-size: clamp(40px, 4.4vw, 70px); } }
+  .intro { display: grid; gap: 22px; align-content: start; }
+  .img { margin: 12px 0 0; aspect-ratio: 4 / 3; overflow: hidden; background: var(--ink); }
+  .pimg { position: absolute; inset: -8% 0; }
+  .img { position: relative; }
+  .img :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: center 62%; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; border-top: 2px solid var(--ink); }
+  .stat { display: flex; flex-direction: column; padding: 22px 16px 26px 0; }
+  .stat + .stat { padding-left: 16px; border-left: 1px solid var(--line-light); }
+  @media (max-width: 599px) { dt { font-size: 12px !important; } .note { font-size: 14px !important; } }
+  dt { order: 2; font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; color: var(--red-deep); margin-top: 10px; }
+  dd { margin: 0; }
+  .value { order: 1; font-size: clamp(40px, 4.4vw, 68px); font-weight: 900; font-stretch: 125%; line-height: 0.85; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .note { order: 3; margin-top: 6px; font-size: 13px; line-height: 1.45; color: var(--muted-on-light); }
+
+  .reasons { min-width: 0; list-style: none; margin: clamp(32px, 4vw, 56px) 0 0; padding: 0; display: grid; gap: 0; }
+  .reasons li {
+    display: grid; grid-template-columns: auto 1fr; column-gap: 18px; row-gap: 4px;
+    padding: 22px 0; border-top: 1px solid var(--line-light);
+  }
+  .ico {
+    grid-row: span 2; display: grid; place-items: center; width: 46px; height: 46px;
+    background: var(--ink); color: #fff; transition: background 0.4s var(--ease), transform 0.4s var(--ease);
+  }
+  .reasons li:hover .ico { background: var(--red); transform: rotate(-6deg); }
+  .ico :global(svg) { width: 20px; height: 20px; }
+  h3 { font-size: 17px; letter-spacing: 0.02em; line-height: 1.15; align-self: end; }
+  .reasons p { color: var(--muted-on-light); font-size: 15px; }
+
+  @media (max-width: 559px) {
+    .stats { grid-template-columns: 1fr; }
+    .stat { flex-direction: row; flex-wrap: wrap; align-items: baseline; column-gap: 14px; padding: 18px 0; }
+    .stat + .stat { padding-left: 0; border-left: 0; border-top: 1px solid var(--line-light); }
+    dt { margin-top: 0; }
+    .note { flex-basis: 100%; }
+  }
+  @media (min-width: 720px) {
+    .reasons { grid-template-columns: 1fr 1fr; column-gap: 40px; }
+  }
+  @media (min-width: 1040px) {
+    .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); align-items: start; column-gap: clamp(48px, 6vw, 96px); }
+    .intro { position: sticky; top: calc(var(--header-h) + 32px); }
+  }
+</style>

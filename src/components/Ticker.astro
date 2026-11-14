@@ -1,0 +1,27 @@
+---
+/** Facts from the supplied business description only. */
+const items = ['Ceramic coatings', 'Established 2012', 'Proudly local', 'Greater Townsville', 'Internationally recognised products', 'Full warranty'];
+---
+<div class="ticker">
+  <p class="visually-hidden">Established 2012. Ceramic coatings with internationally recognised products and full warranty, throughout greater Townsville.</p>
+  <div class="track" aria-hidden="true">
+    {[0, 1].map(() => (
+      <ul role="list">
+        {items.map((t) => <li>{t}</li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .ticker { background: var(--bone); color: var(--ink); overflow: hidden; border-bottom: 1px solid var(--line-light); }
+  .track { display: flex; width: max-content; animation: run 40s linear infinite; }
+  .ticker:hover .track { animation-play-state: paused; }
+  ul { display: flex; list-style: none; margin: 0; padding: 0; }
+  li {
+    display: flex; align-items: center; white-space: nowrap;
+    padding: 20px 0; font-size: clamp(14px, 1.4vw, 18px); font-weight: 800; font-stretch: 125%; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  li::after { content: ''; width: 34px; height: 10px; margin-inline: clamp(22px, 3vw, 40px); background: var(--red); transform: skewX(-24deg); }
+  @keyframes run { to { transform: translateX(-50%); } }
+</style>

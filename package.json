@@ -1,0 +1,19 @@
+{
+  "name": "prestige-mobile-car-detailing",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "npx -y -p @astrojs/check -p typescript@6 astro-check"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "astro": "^7.4.4"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  }
+}

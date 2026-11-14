@@ -1,0 +1,75 @@
+---
+import { site } from '../config/site';
+import { reviews } from '../data/content';
+import Icon from './Icon.astro';
+const [lead, ...rest] = reviews;
+---
+<section class="section reviews" id="reviews" aria-labelledby="reviews-title">
+  <div class="wrap">
+    <div class="top">
+      <p class="label" data-reveal><span><b>05</b> &nbsp;Reviews</span></p>
+      <p class="count" data-reveal>
+        <strong>{site.reviews.count}</strong>
+        <span>{site.reviews.source} reviews<br />from local customers</span>
+      </p>
+    </div>
+
+    <h2 id="reviews-title" class="visually-hidden">What customers say</h2>
+
+    <figure class="lead" data-reveal>
+      <span class="q" aria-hidden="true">“</span>
+      <blockquote><p>{lead}</p></blockquote>
+      <figcaption>{site.reviews.source} review</figcaption>
+    </figure>
+
+    <div class="rest">
+      {rest.map((r, i) => (
+        <figure class="small" data-reveal style={`--d:${i * 0.12}s`}>
+          <blockquote><p>“{r}”</p></blockquote>
+          <figcaption>{site.reviews.source} review</figcaption>
+        </figure>
+      ))}
+    </div>
+
+    {site.reviews.url && (
+      <a class="btn dark" href={site.reviews.url} target="_blank" rel="noopener" data-reveal>Read all {site.reviews.count} reviews <Icon name="arrow" /></a>
+    )}
+  </div>
+</section>
+
+<style>
+  .reviews { background: var(--red); color: #fff; overflow: hidden; }
+  .reviews::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(60% 80% at 100% 0%, rgba(255, 255, 255, 0.12), transparent 60%),
+      radial-gradient(50% 70% at 0% 100%, rgba(0, 0, 0, 0.25), transparent 60%);
+  }
+  .wrap { position: relative; display: grid; gap: clamp(36px, 5vw, 64px); }
+  .top { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255, 255, 255, 0.3); }
+  .label { color: rgba(255, 255, 255, 0.85); }
+  .label :global(b) { color: var(--ink); }
+  .label::before { background: #fff; }
+  .count { display: flex; align-items: center; gap: 14px; }
+  .count strong { font-size: clamp(48px, 6vw, 80px); font-weight: 900; font-stretch: 125%; line-height: 0.85; }
+  .count span { font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.5; }
+
+  figure { margin: 0; }
+  blockquote { margin: 0; }
+  @media (max-width: 599px) { figcaption, .count span { font-size: 12px !important; } }
+  figcaption { margin-top: 18px; font-size: 11px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255, 255, 255, 0.7); }
+
+  .lead { position: relative; }
+  .q { display: block; height: 0.5em; font-size: clamp(140px, 16vw, 240px); font-weight: 900; line-height: 0.85; color: var(--ink); margin-bottom: 16px; }
+  .lead p { font-size: clamp(40px, 7.6vw, 120px); font-weight: 900; font-stretch: 125%; line-height: 0.92; text-transform: uppercase; letter-spacing: -0.02em; max-width: 13ch; }
+
+  .rest { display: grid; gap: 32px; }
+  .small { padding-top: 24px; border-top: 3px solid var(--ink); }
+  .small p { font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; font-stretch: 110%; line-height: 1.2; }
+
+  .btn.dark { justify-self: start; }
+
+  @media (min-width: 900px) {
+    .rest { grid-template-columns: 1fr 1fr; gap: 48px; width: 80%; margin-left: auto; }
+  }
+</style>

@@ -1,0 +1,167 @@
+---
+import { Image, getImage } from 'astro:assets';
+import { gallery, beforeAfter } from '../data/content';
+import Icon from './Icon.astro';
+
+// Pre-build a large version of each shot for the lightbox.
+const large = await Promise.all(gallery.map((g) => getImage({ src: g.image, width: Math.min(g.image.width, 1800), format: 'webp' })));
+---
+<section class="section gallery" id="gallery" aria-labelledby="gallery-title">
+  <div class="wrap">
+    <div class="head">
+      <div>
+        <p class="label" data-reveal><span><b>04</b> &nbsp;Gallery</span></p>
+        <h2 class="display" id="gallery-title" data-reveal>The <em>finish</em><br />is everything.</h2>
+      </div>
+      <p class="note" data-reveal>
+        <span class="demo-chip">Illustrative imagery</span>
+        These photos show the kind of work involved. They are not Prestige customer vehicles. Prestige's own before-and-after shots will go here.
+      </p>
+    </div>
+
+    <ul class="grid" role="list">
+      {gallery.map((g, i) => (
+        <li class:list={['tile', g.size]} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+          <button type="button" class="open" data-lightbox={i} data-src={large[i].src} data-title={g.title} data-alt={g.alt} aria-label={`View larger: ${g.title}`}>
+            <Image src={g.image} alt={g.alt} widths={[360, 560, 800, 1100]} sizes="(min-width: 960px) 34vw, (min-width: 600px) 50vw, 100vw" style={g.position ? `object-position:${g.position}` : undefined} />
+            <span class="cap">
+              <span class="tag">{g.tag}</span>
+              <span class="t">{g.title}</span>
+            </span>
+            <span class="plus" aria-hidden="true"></span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <!-- Before / after: illustrative simulation -->
+    <div class="ba-wrap">
+      <div class="ba-copy" data-reveal>
+        <p class="kicker">Before &amp; after</p>
+        <h3>See the difference correction makes.</h3>
+        <p>Drag across the image to compare a dull, hazy finish with a corrected, glossy one.</p>
+        <p class="ba-flag"><span class="demo-chip">Illustrative demonstration</span> Simulated effect on a sample photo. Not a real Prestige job.</p>
+      </div>
+
+      <div class="ba" data-ba data-reveal style="--pos:50%">
+        <Image class="after" src={beforeAfter.image} alt={`After (illustrative): ${beforeAfter.alt}`} widths={[640, 960, 1440]} sizes="(min-width: 960px) 60vw, 100vw" />
+        <div class="before" aria-hidden="true">
+          <Image src={beforeAfter.image} alt="" widths={[640, 960, 1440]} sizes="(min-width: 960px) 60vw, 100vw" />
+          <span class="swirl"></span>
+        </div>
+        <span class="tagb l">Before</span>
+        <span class="tagb r">After</span>
+        <span class="handle" aria-hidden="true"><i></i></span>
+        <input type="range" min="0" max="100" value="50" aria-label="Before and after comparison: slide to reveal" data-ba-range />
+      </div>
+    </div>
+  </div>
+
+  <dialog class="lightbox" data-lightbox-dialog aria-label="Gallery image">
+    <figure>
+      <img alt="" data-lb-img />
+      <figcaption data-lb-cap></figcaption>
+    </figure>
+    <button type="button" class="lb-btn lb-close" data-lb-close aria-label="Close">✕</button>
+    <button type="button" class="lb-btn lb-prev" data-lb-prev aria-label="Previous image"><Icon name="arrow" /></button>
+    <button type="button" class="lb-btn lb-next" data-lb-next aria-label="Next image"><Icon name="arrow" /></button>
+  </dialog>
+</section>
+
+<style>
+  .gallery { background: var(--black); }
+  .head { display: grid; gap: 28px; margin-bottom: clamp(40px, 6vw, 72px); }
+  .note { display: grid; gap: 14px; justify-items: start; max-width: 44ch; color: var(--muted-on-dark); font-size: 14px; }
+  @media (min-width: 960px) { .head { grid-template-columns: 1.4fr 1fr; align-items: end; } }
+
+  /* Editorial grid */
+  .grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: clamp(8px, 1vw, 14px);
+    grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: clamp(150px, 42vw, 240px); grid-auto-flow: dense;
+  }
+  .tile { position: relative; }
+  .big { grid-column: span 2; grid-row: span 2; }
+  .wide { grid-column: span 2; }
+  .tall { grid-row: span 2; }
+  @media (max-width: 959px) { .square { grid-row: span 2; } }
+  @media (min-width: 960px) {
+    .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: clamp(180px, 17vw, 250px); }
+  }
+
+  .open {
+    position: absolute; inset: 0; display: block; width: 100%; padding: 0; border: 0; cursor: zoom-in;
+    background: var(--charcoal); overflow: hidden; color: #fff; text-align: left;
+  }
+  .open :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1.4s var(--ease), filter 0.8s var(--ease); filter: grayscale(0.25) brightness(0.88); }
+  .open:hover :global(img), .open:focus-visible :global(img) { transform: scale(1.06); filter: none; }
+  .open::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 55%, rgba(0, 0, 0, 0.8)); opacity: 0.8; transition: opacity 0.5s; }
+  .cap { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; display: grid; gap: 4px; padding: clamp(12px, 1.6vw, 20px); transform: translateY(8px); transition: transform 0.6s var(--ease); }
+  .open:hover .cap { transform: none; }
+  @media (max-width: 599px) { .tag, .kicker, .tagb { font-size: 11px !important; } .note, .ba-flag { font-size: 14px !important; } }
+  .tag { font-size: 10px; font-weight: 800; letter-spacing: 0.22em; text-transform: uppercase; color: var(--red-hot); }
+  .t { font-size: clamp(14px, 1.5vw, 19px); font-weight: 800; font-stretch: 125%; text-transform: uppercase; line-height: 1.1; }
+  .plus { position: absolute; right: 14px; top: 14px; z-index: 1; width: 38px; height: 38px; border: 1px solid rgba(255,255,255,0.5); opacity: 0; transform: scale(0.7) rotate(-45deg); transition: 0.5s var(--ease); background: rgba(10,10,11,0.4); }
+  .plus::before, .plus::after { content: ''; position: absolute; left: 50%; top: 50%; width: 14px; height: 1.5px; background: #fff; transform: translate(-50%, -50%); }
+  .plus::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .open:hover .plus, .open:focus-visible .plus { opacity: 1; transform: none; }
+
+  /* Before / after */
+  .ba-wrap { display: grid; gap: 32px; margin-top: clamp(72px, 9vw, 130px); align-items: center; }
+  .ba-copy { display: grid; gap: 16px; justify-items: start; }
+  .kicker { font-size: 11px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red-hot); }
+  .ba-copy h3 { font-size: clamp(28px, 3.2vw, 44px); }
+  .ba-copy p { color: var(--muted-on-dark); max-width: 40ch; }
+  .ba-flag { display: grid; gap: 10px; justify-items: start; font-size: 13px; padding-top: 16px; border-top: 1px solid var(--line-dark); }
+  @media (min-width: 960px) { .ba-wrap { grid-template-columns: 4fr 8fr; gap: 64px; } }
+
+  .ba { position: relative; aspect-ratio: 4 / 3; overflow: hidden; user-select: none; background: var(--charcoal); touch-action: pan-y; }
+  .ba :global(img) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; pointer-events: none; }
+  .before { position: absolute; inset: 0; clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
+  .before :global(img) { filter: grayscale(0.6) brightness(0.86) contrast(0.6) blur(1.2px) sepia(0.15); }
+  .before::after { content: ''; position: absolute; inset: 0; background: linear-gradient(160deg, rgba(220, 214, 200, 0.28), rgba(160, 155, 145, 0.12)); mix-blend-mode: screen; }
+  /* Swirl marks: soft concentric scratches around two "light sources" */
+  .swirl {
+    position: absolute; inset: 0; mix-blend-mode: screen; opacity: 0.32;
+    background:
+      repeating-radial-gradient(circle at 34% 30%, rgba(255,255,255,0.22) 0 0.6px, transparent 1px 14px),
+      repeating-radial-gradient(circle at 70% 70%, rgba(255,255,255,0.16) 0 0.6px, transparent 1px 18px);
+    -webkit-mask: radial-gradient(circle at 34% 30%, #000 0 18%, transparent 34%), radial-gradient(circle at 70% 70%, #000 0 14%, transparent 30%);
+    mask: radial-gradient(circle at 34% 30%, #000 0 18%, transparent 34%), radial-gradient(circle at 70% 70%, #000 0 14%, transparent 30%);
+    filter: blur(0.3px);
+  }
+  .handle { position: absolute; top: 0; bottom: 0; left: var(--pos); width: 2px; background: #fff; transform: translateX(-1px); pointer-events: none; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+  .handle i {
+    position: absolute; top: 50%; left: 50%; width: 54px; height: 54px; transform: translate(-50%, -50%);
+    background: var(--red); border-radius: 50%; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .handle i::before, .handle i::after { content: ''; position: absolute; top: 50%; width: 8px; height: 8px; border: solid #fff; border-width: 0 0 2px 2px; }
+  .handle i::before { left: 14px; transform: translateY(-50%) rotate(45deg); }
+  .handle i::after { right: 14px; transform: translateY(-50%) rotate(-135deg); }
+  .tagb { position: absolute; top: 16px; z-index: 1; font-size: 11px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; padding: 7px 10px; background: rgba(10,10,11,0.65); backdrop-filter: blur(6px); pointer-events: none; }
+  .tagb.l { left: 16px; }
+  .tagb.r { right: 16px; background: var(--red); }
+  .ba { cursor: ew-resize; }
+  .ba input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; pointer-events: none; }
+  .ba:has(input:focus-visible) .handle i { outline: 2px solid #fff; outline-offset: 4px; }
+
+  /* Lightbox */
+  .lightbox { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgba(6, 6, 7, 0.96); color: #fff; }
+  .lightbox[open] { display: grid; place-items: center; animation: lbIn 0.5s var(--ease); }
+  .lightbox::backdrop { background: transparent; }
+  @keyframes lbIn { from { opacity: 0; } }
+  .lightbox figure { margin: 0; display: grid; gap: 14px; justify-items: center; padding: 72px 16px 24px; }
+  .lightbox img { max-width: min(92vw, 1600px); max-height: calc(100dvh - 160px); width: auto; height: auto; object-fit: contain; }
+  .lightbox figcaption { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-on-dark); }
+  .lb-btn { position: fixed; display: grid; place-items: center; width: 52px; height: 52px; background: rgba(255,255,255,0.06); color: #fff; border: 1px solid rgba(255,255,255,0.2); cursor: pointer; transition: background 0.3s, border-color 0.3s; font-size: 18px; }
+  .lb-btn:hover { background: var(--red); border-color: var(--red); }
+  .lb-btn :global(svg) { width: 20px; height: 20px; }
+  .lb-close { top: 16px; right: 16px; }
+  .lb-prev, .lb-next { top: 50%; transform: translateY(-50%); }
+  .lb-prev { left: 16px; }
+  .lb-prev :global(svg) { transform: rotate(180deg); }
+  .lb-next { right: 16px; }
+  @media (max-width: 599px) {
+    .lb-prev, .lb-next { top: auto; bottom: 16px; transform: none; }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+import { site, nav } from '../config/site';
+import Icon from './Icon.astro';
+import Wordmark from './Wordmark.astro';
+---
+<header class="header" data-header>
+  <div class="wrap bar">
+    <a class="brand" href="#top">
+      <Wordmark /><span class="visually-hidden">, back to top</span>
+    </a>
+
+    <nav class="links" aria-label="Main">
+      {nav.map((n) => <a href={n.href} data-nav-link>{n.label}</a>)}
+    </nav>
+
+    <div class="actions">
+      <a class="btn call" href={site.contact.phoneHref} aria-label={`Call ${site.contact.phone}`}>
+        <Icon name="phone" /><span class="full">{site.contact.phone}</span><span class="short">Call</span>
+      </a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu" data-menu-toggle>
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="mobile" id="mobile-menu" data-menu>
+    <nav class="wrap" aria-label="Mobile">
+      <ol role="list">
+        {nav.map((n, i) => (
+          <li style={`--i:${i}`}>
+            <a href={n.href} tabindex="-1" data-menu-link><small>0{i + 1}</small>{n.label}</a>
+          </li>
+        ))}
+      </ol>
+      <div class="m-foot" style={`--i:${nav.length}`}>
+        <a class="btn" href={site.contact.phoneHref} tabindex="-1" data-menu-link><Icon name="phone" /> Call {site.contact.phone}</a>
+        <p class="status" data-status><i></i><span data-status-text>{site.hoursSummary}</span></p>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: fixed; inset: 0 0 auto; z-index: 100;
+    border-bottom: 1px solid transparent;
+    transition: background 0.5s var(--ease), border-color 0.5s var(--ease), transform 0.5s var(--ease);
+  }
+  .header::before {
+    content: ''; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(rgba(0, 0, 0, 0.55), transparent);
+    transition: opacity 0.5s;
+  }
+  .header.is-scrolled { background: rgba(10, 10, 11, 0.92); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); border-color: var(--line-dark); }
+  .header.is-scrolled::before { opacity: 0; }
+  .header.is-hidden { transform: translateY(-100%); }
+  .header.is-open { background: var(--black); transform: none; }
+
+  .bar { height: var(--header-h); display: flex; align-items: center; justify-content: space-between; gap: 24px; position: relative; z-index: 2; }
+  .brand { text-decoration: none; display: flex; align-items: center; min-height: 48px; }
+
+  .links { display: none; gap: clamp(22px, 2.6vw, 40px); }
+  .links a {
+    position: relative; text-decoration: none; padding: 8px 0;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(255, 255, 255, 0.72);
+    transition: color 0.3s;
+  }
+  .links a::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--red);
+    transform: scaleX(0); transform-origin: right; transition: transform 0.45s var(--ease);
+  }
+  .links a:hover, .links a.is-active { color: #fff; }
+  .links a:hover::after, .links a.is-active::after { transform: scaleX(1); transform-origin: left; }
+
+  .actions { display: flex; align-items: center; gap: 10px; }
+  .call { min-height: 46px; padding: 0 20px; font-size: 12px; gap: 10px; white-space: nowrap; }
+  .call :global(svg) { width: 16px; height: 16px; }
+  .call .short { display: none; }
+
+  .burger {
+    position: relative; width: 46px; height: 46px; background: none; cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.25); color: #fff;
+  }
+  .burger span {
+    position: absolute; left: 12px; right: 12px; height: 2px; background: currentColor;
+    transition: transform 0.5s var(--ease), top 0.3s var(--ease) 0.2s, width 0.4s var(--ease);
+  }
+  .burger span:nth-child(1) { top: 17px; }
+  .burger span:nth-child(2) { top: 26px; right: 18px; }
+  .burger:hover span:nth-child(2) { right: 12px; }
+  .is-open .burger span { transition: top 0.3s var(--ease), transform 0.5s var(--ease) 0.25s, right 0.3s; }
+  .is-open .burger span:nth-child(1) { top: 21.5px; transform: rotate(45deg); }
+  .is-open .burger span:nth-child(2) { top: 21.5px; right: 12px; transform: rotate(-45deg); }
+
+  /* Mobile menu: full-height panel that wipes down */
+  .mobile {
+    position: fixed; inset: 0; z-index: 1; padding-top: var(--header-h);
+    background: var(--black);
+    clip-path: inset(0 0 100% 0); visibility: hidden;
+    transition: clip-path 0.8s var(--ease-in-out), visibility 0s linear 0.8s;
+    overflow-y: auto;
+  }
+  .mobile::after {
+    content: ''; position: absolute; right: -20%; bottom: -10%; width: 80vw; height: 60vh;
+    background: radial-gradient(closest-side, rgba(227, 38, 43, 0.22), transparent);
+    pointer-events: none;
+  }
+  .is-open .mobile { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path 0.8s var(--ease-in-out), visibility 0s; }
+  .mobile ol { list-style: none; margin: 0; padding: 24px 0 0; border-top: 1px solid var(--line-dark); }
+  .mobile li, .m-foot { opacity: 0; transform: translateY(24px); transition: opacity 0.4s, transform 0.4s var(--ease); }
+  .is-open .mobile li, .is-open .m-foot {
+    opacity: 1; transform: none;
+    transition: opacity 0.7s var(--ease) calc(0.25s + var(--i) * 0.06s), transform 0.7s var(--ease) calc(0.25s + var(--i) * 0.06s);
+  }
+  .mobile li a {
+    display: flex; align-items: baseline; gap: 16px; padding: 10px 0; text-decoration: none;
+    font-size: clamp(36px, 10vw, 56px); font-weight: 800; font-stretch: 125%; text-transform: uppercase; line-height: 1.05;
+  }
+  .mobile li a small { font-size: 12px; font-weight: 700; color: var(--red); letter-spacing: 0.1em; font-stretch: 100%; }
+  .mobile li a:active, .mobile li a:hover { color: var(--red-hot); }
+  .m-foot { display: grid; gap: 12px; padding: 32px 0 40px; position: relative; z-index: 1; }
+  .m-foot .status { margin-top: 8px; color: var(--muted-on-dark); }
+
+  @media (min-width: 1040px) {
+    .links { display: flex; }
+    .burger, .mobile { display: none; }
+  }
+  @media (max-width: 560px) {
+    .call { padding: 0 14px; font-size: 11px; min-height: 44px; }
+    .call .full { display: none; }
+    .call .short { display: inline; }
+    .burger { width: 44px; height: 44px; flex: none; }
+    .burger span:nth-child(1) { top: 16px; }
+    .burger span:nth-child(2) { top: 25px; }
+    .is-open .burger span:nth-child(1), .is-open .burger span:nth-child(2) { top: 20.5px; }
+    .actions { gap: 8px; }
+    .bar { gap: 12px; }
+  }
+
+</style>

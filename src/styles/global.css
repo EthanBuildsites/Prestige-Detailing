@@ -1,0 +1,181 @@
+/* ────────────────────────────────────────────────────────────
+   Prestige Car Detailing Townsville
+   Studio black, charcoal and graphite, with off-white and
+   brushed-steel surfaces for contrast. One red: the logo's tail-light red.
+   Type: Archivo in two widths. Expanded (125) for display,
+   normal (100) for body.
+   ──────────────────────────────────────────────────────────── */
+:root {
+  --black: #0a0a0b;
+  --ink: #121212; /* matches the logo background */
+  --charcoal: #18181a;
+  --graphite: #232326;
+  --line-dark: rgba(255, 255, 255, 0.1);
+
+  --bone: #f3f1ec;
+  --paper: #e8e5df;
+  --steel: #c9cbcf;
+  --steel-2: #b4b7bc;
+  --line-light: rgba(10, 10, 11, 0.14);
+
+  --text-on-dark: #f3f1ec;
+  --muted-on-dark: #9d9fa4;
+  --text-on-light: #121212;
+  --muted-on-light: #5b5d62;
+
+  --red: #e3262b;
+  --red-hot: #ff3a3f;
+  --red-deep: #a8161b;
+
+  --font: 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --gutter: clamp(16px, 4vw, 56px);
+  --max: 1320px;
+  --header-h: 76px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--header-h); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--black);
+  color: var(--text-on-dark);
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.6;
+  font-stretch: 100%;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+p { margin: 0; }
+h1, h2, h3, h4 { margin: 0; font-weight: 800; font-stretch: 125%; text-transform: uppercase; line-height: 0.95; letter-spacing: -0.01em; }
+::selection { background: var(--red); color: #fff; }
+:focus-visible { outline: 2px solid var(--red-hot); outline-offset: 3px; }
+button { font: inherit; }
+
+.wrap > *, .grid > * { min-width: 0; }
+.wrap { width: 100%; max-width: var(--max); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: clamp(80px, 11vw, 150px); position: relative; }
+
+/* Surfaces */
+.on-light { background: var(--bone); color: var(--text-on-light); color-scheme: light; }
+.on-steel { background: var(--steel); color: var(--text-on-light); color-scheme: light; }
+.on-charcoal { background: var(--charcoal); }
+
+.skip-link { position: absolute; left: 12px; top: -80px; z-index: 200; background: var(--bone); color: var(--ink); padding: 10px 16px; font-weight: 700; }
+.skip-link:focus { top: 12px; }
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Section label: index number, rule, name */
+.label {
+  display: inline-flex; align-items: center; gap: 14px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--muted-on-dark);
+}
+.label b { color: var(--red); font-weight: 800; }
+.label::before { content: ''; width: 36px; height: 2px; background: var(--red); order: 1; }
+.label span { order: 2; }
+.on-light .label, .on-steel .label { color: var(--muted-on-light); }
+
+.display { font-size: clamp(32px, 7.4vw, 112px); overflow-wrap: break-word; }
+@media (max-width: 599px) { .display { font-size: min(8.6vw, 44px); } }
+.display em { font-style: normal; color: var(--red); }
+.on-light .display em, .on-steel .display em { color: var(--red); }
+
+/* Buttons */
+.btn {
+  --bg: var(--red); --fg: #fff; --bd: var(--red);
+  position: relative; isolation: isolate; overflow: hidden;
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  min-height: 56px; padding: 0 28px;
+  background: var(--bg); color: var(--fg); border: 1.5px solid var(--bd);
+  font-size: 13px; font-weight: 800; font-stretch: 125%; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+  cursor: pointer;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+.btn::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background: var(--fill, var(--red-deep));
+  transform: scaleX(0); transform-origin: right; transition: transform 0.55s var(--ease);
+}
+.btn:hover::before { transform: scaleX(1); transform-origin: left; }
+.btn svg { width: 18px; height: 18px; flex: none; transition: transform 0.4s var(--ease); }
+.btn:hover svg.arrow { transform: translateX(4px); }
+.btn.ghost { --bg: transparent; --fg: #fff; --bd: rgba(255, 255, 255, 0.35); --fill: #fff; }
+.btn.ghost:hover { --fg: var(--ink); border-color: #fff; }
+.btn.dark { --bg: var(--ink); --fg: #fff; --bd: var(--ink); --fill: var(--red); }
+.btn.dark:hover { border-color: var(--red); }
+.btn.outline-dark { --bg: transparent; --fg: var(--ink); --bd: rgba(10, 10, 11, 0.3); --fill: var(--ink); }
+.btn.outline-dark:hover { --fg: #fff; border-color: var(--ink); }
+
+/* Text link with sliding underline */
+.link {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px;
+  font-size: 13px; font-weight: 800; font-stretch: 125%; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none;
+  padding-bottom: 6px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1.5px no-repeat;
+  transition: background-size 0.5s var(--ease), color 0.3s;
+}
+.link:hover { color: var(--red); background-size: 0 1.5px; background-position: 100% 100%; }
+.link svg { width: 16px; height: 16px; }
+
+/* Demo-content marker (hazard-stripe chip) */
+.demo-chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; line-height: 1;
+  padding: 6px 10px 6px 8px; border: 1px dashed currentColor; color: #f2b632; white-space: nowrap;
+}
+.demo-chip::before {
+  content: ''; width: 14px; height: 10px; flex: none;
+  background: repeating-linear-gradient(-45deg, #f2b632 0 3px, transparent 3px 6px);
+}
+.on-light .demo-chip, .on-steel .demo-chip { color: #8a5a00; }
+.on-light .demo-chip::before, .on-steel .demo-chip::before { background: repeating-linear-gradient(-45deg, #8a5a00 0 3px, transparent 3px 6px); }
+
+/* Live open/closed status */
+.status {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 44px;
+  font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+}
+.status i { width: 8px; height: 8px; border-radius: 50%; background: var(--muted-on-dark); flex: none; }
+.status[data-open='true'] i { background: #3ddc84; animation: pulse 2s infinite; }
+.status[data-open='false'] i { background: var(--red); }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(61, 220, 132, 0.6); } 70%, 100% { box-shadow: 0 0 0 8px rgba(61, 220, 132, 0); } }
+
+/* Phones: lift the smallest labels to a readable size */
+@media (max-width: 599px) {
+  .label { font-size: 12px; }
+  .demo-chip { font-size: 11px; }
+}
+
+/* ── Motion ─────────────────────────────────────────────── */
+/* Fade-up reveal */
+.js [data-reveal] { opacity: 0; transform: translateY(32px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--d, 0s); }
+.js [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* Image wipe reveal: a surface-coloured panel lifts off the image */
+[data-wipe] { position: relative; overflow: hidden; }
+.js [data-wipe]::after {
+  content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: var(--wipe, var(--black));
+  transform-origin: 50% 0; transition: transform 1.3s var(--ease-in-out); transition-delay: var(--d, 0s);
+}
+.js [data-wipe] img { transform: scale(1.16); transition: transform 2.2s var(--ease); transition-delay: var(--d, 0s); }
+.js [data-wipe].is-visible::after { transform: scaleY(0); }
+.js [data-wipe].is-visible img { transform: scale(1); }
+.on-light { --wipe: var(--bone); }
+.on-steel { --wipe: #c3c5c9; }
+.on-charcoal { --wipe: var(--charcoal); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+  .js [data-reveal], .js [data-wipe] img { opacity: 1; transform: none; }
+  .js [data-wipe]::after { display: none; }
+}

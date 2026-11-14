@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import { site } from '../config/site';
+import Icon from './Icon.astro';
+import mainImg from '../assets/images/polishing-black-car.jpg';
+import detailImg from '../assets/images/hand-finish.jpeg';
+---
+<section class="section about on-light" id="about" aria-labelledby="about-title">
+  <div class="year" aria-hidden="true" data-parallax="-0.08">{site.established}</div>
+
+  <div class="wrap grid">
+    <div class="head">
+      <p class="label" data-reveal><span><b>01</b> &nbsp;About Prestige</span></p>
+      <h2 class="display" id="about-title" data-reveal>Proudly local.<br /><em>Obsessively</em> thorough.</h2>
+    </div>
+
+    <figure class="main" data-wipe>
+      <Image src={mainImg} alt="Detailer machine-polishing the glossy black panel of a car in a workshop" widths={[480, 720, 960]} sizes="(min-width: 960px) 38vw, 90vw" />
+      <figcaption>Illustrative photography</figcaption>
+    </figure>
+
+    <div class="copy">
+      <p class="intro" data-reveal>
+        Established in {site.established}, Prestige Car Detailing is a proudly local business providing premium detailing services throughout {site.region}.
+      </p>
+      <p data-reveal>
+        We pride ourselves on providing value-for-money detailing solutions with excellence. With a strong emphasis on the supply and installation of ceramic coatings, we are well placed to provide ongoing protection of the inside and outside of your pride and joy for years to come.
+      </p>
+      <p data-reveal>
+        We use high-quality, internationally recognised products, backed by a full warranty.
+      </p>
+
+      <div class="est" data-reveal>
+        <span class="est-tag">Established</span>
+        <span class="est-year">{site.established}</span>
+        <span class="est-rule"></span>
+        <span class="est-place"><Icon name="pin" /> Townsville, QLD</span>
+      </div>
+
+      <a class="link" href="#services" data-reveal>See what we do <Icon name="arrow" /></a>
+    </div>
+
+    <figure class="detail" data-wipe style="--d:0.2s">
+      <Image src={detailImg} alt="Gloved hand buffing a dark car's headlight surround with a yellow microfibre cloth" widths={[320, 458]} sizes="(min-width: 960px) 18vw, 44vw" />
+    </figure>
+  </div>
+</section>
+
+<style>
+  .about { overflow: hidden; }
+  .year {
+    position: absolute; right: -0.06em; top: 0.1em; z-index: 0; pointer-events: none;
+    font-size: clamp(160px, 30vw, 460px); font-weight: 900; font-stretch: 125%; line-height: 0.8; letter-spacing: -0.04em;
+    color: transparent; -webkit-text-stroke: 1.5px rgba(10, 10, 11, 0.08);
+  }
+  .grid { position: relative; z-index: 1; display: grid; gap: clamp(28px, 4vw, 48px); }
+  .head { display: grid; gap: 22px; }
+
+  figure { margin: 0; position: relative; overflow: hidden; background: var(--paper); }
+  figure :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .main { aspect-ratio: 4 / 5; }
+  @media (max-width: 599px) { .est-tag, .est-place { font-size: 12px; } }
+  figcaption {
+    position: absolute; left: 12px; bottom: 12px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85); background: rgba(10, 10, 11, 0.55); padding: 6px 9px; backdrop-filter: blur(6px);
+  }
+  .detail { aspect-ratio: 3 / 4; width: 52%; justify-self: end; margin-top: -30%; margin-right: -8px; border: 8px solid var(--bone); box-sizing: content-box; order: -0; }
+  @media (max-width: 959px) { .detail { display: none; } }
+
+  .copy { display: grid; gap: 20px; align-content: start; justify-items: start; }
+  .copy p { color: var(--muted-on-light); max-width: 54ch; }
+  .copy .intro { color: var(--ink); font-size: clamp(20px, 1.9vw, 25px); line-height: 1.45; font-weight: 500; }
+
+  .est {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; width: 100%;
+    margin-block: 14px 6px; padding-block: 22px; border-block: 1px solid var(--line-light);
+  }
+  .est-tag { font-size: 11px; font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase; color: var(--red); }
+  .est-year { font-size: clamp(44px, 5vw, 64px); font-weight: 900; font-stretch: 125%; line-height: 0.9; letter-spacing: -0.02em; }
+  .est-rule { flex: 1; min-width: 30px; height: 2px; background: var(--red); }
+  .est-place { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; }
+  .est-place :global(svg) { width: 15px; height: 15px; color: var(--red); }
+
+  @media (min-width: 960px) {
+    .grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-areas:
+        'h h h h h h h h . . . .'
+        'm m m m m . c c c c c c'
+        'm m m m m . c c c c c c'
+        '. . . d d d c c c c c c';
+      row-gap: 56px;
+    }
+    .head { grid-area: h; }
+    .main { grid-area: m; }
+    .copy { grid-area: c; padding-top: 40px; }
+    .detail { grid-area: d; width: auto; margin-top: -45%; justify-self: stretch; }
+  }
+</style>
